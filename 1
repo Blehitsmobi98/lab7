@@ -1,0 +1,160 @@
+package MavenTesPackage;
+
+import java.time.Duration;
+import java.util.List;
+
+//import org.openqa.selenium.Alert;
+import org.openqa.selenium.NoAlertPresentException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+//import org.testng.Assert;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+public class Lab7 {
+
+	public String baseurl = "http://baseline01.curemd.com/curemd/datLogin.asp";
+	public WebDriver driver;
+	public Lab7POM pom;
+
+	public Actions actions;
+	public WebDriverWait wait;
+	// public Alert alert;
+	// public String actual = "", expected = "";
+
+	@BeforeTest
+	public void goToPage() {
+		/// System.setProperty("webdriver.chrome.driver",
+		// "C:\\Users\\ACER\\Desktop\\CureMD\\QA_Automation\\Java\\chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver", "C:\\Users\\4123\\Downloads\\chromedriver.exe");
+		// Create New WebDriver and maximize it
+		driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.get(baseurl);
+
+		pom = new Lab7POM(driver);
+
+		// Create Actions & Wait Objects
+		actions = new Actions(driver);
+		wait = new WebDriverWait(driver, Duration.ofSeconds(3));
+
+	}
+
+	@DataProvider(name = "test1data")
+	public Object[][] getData() {
+
+		String projectPath = System.getProperty("user.dir");
+		Object data[][] = testData(projectPath + "\\Excel\\dataProv.xlsx", "Sheet1");
+		return data;
+	}
+
+	public Object[][] testData(String excelPath, String sheetName) {
+
+		Lab7POM excel = new Lab7POM(excelPath, sheetName);
+
+		int rowCount = excel.getRowCount();
+		int colCount = excel.getColumnCount();
+
+		Object data[][] = new Object[rowCount - 1][colCount];
+
+		for (int i = 1; i < rowCount; i++) { // started with 1 because first is heading
+			for (int j = 0; j < colCount; j++) { // started with 0 because first is data
+				String cellData = excel.getCellDataString(i, j);
+				// System.out.print(cellData+" | ");
+				data[i - 1][j] = cellData;
+			}
+			// System.out.println();
+		}
+		return data;
+	}
+
+	@Test(priority = 0)
+	public void login() {
+
+		// String loginPageWindow = driver.getWindowHandle();
+
+		pom.userName.sendKeys("ChargePStatemen");
+
+		pom.password.sendKeys("SuPPort.2014");
+
+		pom.loginButton.click();
+
+		for (String winHan : driver.getWindowHandles()) {
+			driver.switchTo().window(winHan);
+		}
+
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(pom.iframeMenu));
+
+		//boolean actual = wait.until(ExpectedConditions.visibilityOf(pom.patientButton)).isDisplayed();
+		//boolean expected = true;
+		//Assert.assertEquals(actual, expected);
+	}
+
+	@Test(priority = 1)
+	public void addPatientButton() {
+
+		pom.patientButton.click();
+
+		driver.switchTo().parentFrame();
+
+		wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(pom.driverIframeBody));
+
+		pom.addButton.click();
+
+	}
+
+	@Test(priority = 2, dataProvider = "test1data")
+	public void addPatientData(String FirstName, String LastName) {
+
+		actions.clickAndHold(pom.titleSelect).perform();
+		
+		pom.titleSelectOption.click();
+
+		pom.fName.sendKeys(FirstName);
+
+		pom.lName.sendKeys(LastName);
+
+		actions.clickAndHold(pom.genderSelect).perform();
+
+		pom.genderSelectOption.click();
+
+		pom.dob.sendKeys("12/12/2005");
+
+		pom.locationSelect.click();
+
+		List<WebElement> locationSelectOptions = driver.findElements(pom.locationSelectOption);
+
+		locationSelectOptions.get(2).click();
+
+		pom.saveButton.click();
+
+		try {
+			wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(pom.iframeNewSaveAs));
+			pom.saveAsNewButton.click();
+			//wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(pom.driverIframeBody));
+			driver.switchTo().defaultContent();
+			wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(pom.iframeMenu));
+			addPatientButton();
+			/*wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(pom.driverIframeBody));
+			pom.fName.clear();
+			pom.lName.clear();
+			pom.saveButton = pom.saveButtonNew;
+			//wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(pom.driverIframeBody));
+			//driver.switchTo().frame(pom.driverIframeBody);
+			*/
+		} catch (NoAlertPresentException e) {
+			System.out.println("No PopUp Present, Moving To Next Data Provider.");
+		}
+	}
+	@AfterTest
+	public void closeDriver() {
+		// driver.close();
+	}
+
+}
