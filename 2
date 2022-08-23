@@ -1,0 +1,147 @@
+package MavenTesPackage;
+
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class Lab7POM {
+	
+	static String projectPath = "user.dir";
+	static XSSFWorkbook workbook;
+	static XSSFSheet sheet;
+	
+	WebDriver driver;
+	
+	
+	@FindBy(xpath = "//input[@id='vchLogin_Name']")
+	WebElement userName;
+	
+	@FindBy(xpath = "//input[@id='vchPassword']")
+	WebElement password;
+	
+	@FindBy(xpath = "//button[@class='btn btn-danger']")
+	WebElement loginButton;
+	
+	@FindBy(xpath = "//iframe[@id='fraCureMD_Menu']")
+	WebElement iframeMenu;
+	
+	@FindBy(xpath = "//img[@id='patientBtn']")
+	WebElement patientButton;
+	
+	@FindBy(xpath = "//iframe[@id='fraCureMD_Body']")
+	WebElement driverIframeBody;
+	
+	@FindBy(xpath = "//td[@title='Add Patient']")
+	WebElement addButton;
+	
+	@FindBy(xpath = "//select[@id='cmbVTitle']")
+	WebElement titleSelect;
+	
+	@FindBy(xpath = "//select[@id='cmbVTitle']//option[text()='Prof']")
+	WebElement titleSelectOption;
+	
+	@FindBy(xpath = "//input[@id='txtVFNAME']")
+	WebElement fName;
+	
+	@FindBy(xpath = "//input[@id='txtVLNAME']")
+	WebElement lName;
+	
+	@FindBy(xpath = "//select[@id='cmbVSEX']")
+	WebElement genderSelect;
+	
+	@FindBy(xpath = "//select[@id='cmbVSEX']//option[@value='O']")
+	WebElement genderSelectOption;
+	
+	@FindBy(xpath = "//input[@id='txtDDOB']")
+	WebElement dob;
+	
+	@FindBy(xpath = "//span[@role='presentation']")
+	WebElement locationSelect;
+	
+	//@FindBy(xpath = "//select[@id='cmbILOCID']//option")
+	//WebElement locationSelectOption;
+	
+	@FindBy(xpath = "//td[@id='tdsave']")
+	WebElement saveButton;
+	
+	By locationSelectOption = By.xpath("//select[@id='cmbILOCID']//option");
+	
+	@FindBy(xpath="//iframe[@id='DynamicBHdialogbox']\n")
+	WebElement iframeNewSaveAs;
+	
+	@FindBy(xpath="//button[@id='saveAsNewButton']")
+	WebElement saveAsNewButton;
+	
+	@FindBy(xpath="//td[@id='btnActual']")
+	WebElement saveButtonNew;
+	
+	
+	public Lab7POM(WebDriver driver){
+		try {
+		this.driver=driver;
+		PageFactory.initElements(driver,this);
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+			System.out.println(e.getCause());
+			e.printStackTrace();
+		}
+	}
+	
+	public Lab7POM(String excelPath, String sheetName){
+		try {
+		workbook = new XSSFWorkbook(excelPath);
+		sheet = workbook.getSheet(sheetName);
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+			System.out.println(e.getCause());
+			e.printStackTrace();
+		}
+	}
+	
+public static void getExcelSheet() {
+		
+		try {
+			workbook = new XSSFWorkbook(projectPath + "\\Excel\\dataProv.xlsx");
+			sheet = workbook.getSheet("Sheet1");
+		} catch (Exception e) {
+
+			System.out.println(e.getMessage());
+			System.out.println(e.getCause());
+			e.printStackTrace();
+		}
+	}
+
+	public static int getRowCount() {
+		
+		int rowCount = sheet.getPhysicalNumberOfRows();
+		System.out.println("Number of rows are: " + rowCount);
+		return rowCount;
+	}
+	
+	public static int getColumnCount() {
+		
+		int colCount = sheet.getRow(0).getPhysicalNumberOfCells();
+		System.out.println("Number of Columns are: " + colCount);
+		return colCount;
+	}
+	
+	public static double getCellDataNumeric(int row, int col) {
+		
+		double cellDataNum = sheet.getRow(row).getCell(col).getNumericCellValue();
+		//System.out.println("Number At Given Cell is: " + cellData);
+		return cellDataNum;
+	}
+
+	public static String getCellDataString(int row, int col) {
+		
+		String cellDataStr = sheet.getRow(row).getCell(col).getStringCellValue();
+		//System.out.println("String At Given Cell is: " + cellData);
+		return cellDataStr;
+	}
+}
