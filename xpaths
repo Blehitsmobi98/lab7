@@ -1,0 +1,53 @@
+package example;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class xpaths {
+	WebDriver driver;		
+
+	@FindBy (xpath="//iframe[@id='fraCureMD_Menu']")
+	WebElement menuframe; 
+
+	@FindBy (xpath="//img[contains(@id,'patientBtn')]")
+	WebElement patientIcon; 
+
+	@FindBy (xpath="//td[contains(@onclick,'javascript:AddPatient()')]")
+	WebElement addPatient; 
+	
+	@FindBy (xpath="//select[contains(@id,'cmbVTitle')]")
+	WebElement title; 
+	
+	@FindBy (xpath="//input[contains(@id,'txtVFNAME')]")
+	WebElement fname; 
+	
+	@FindBy (xpath="//input[contains(@id,'txtVLNAME')]")
+	WebElement lname; 
+	
+	@FindBy (xpath="//select[contains(@id,'cmbVSEX')]")
+	WebElement sex; 
+	
+	@FindBy (xpath="//input[contains(@id,'txtDDOB')]")
+	WebElement dob; 
+	
+	@FindBy (xpath="//select[contains(@id,'cmbILOCID')]")
+	WebElement location; 
+	
+	@FindBy (xpath="//td[contains(@id,'tdsave')]")
+	WebElement savebtn; 
+	
+	@FindBy (xpath="//iframe[contains(@id,'DynamicBHdialogbox')]")
+	WebElement dupPatientframe; 
+	
+	@FindBy (xpath="//button[contains(@id,'saveAsNewButton')]")
+	WebElement savenewbtn; 
+	
+	
+	
+	public xpaths(WebDriver driver ) {
+		this.driver = driver;
+		PageFactory.initElements(driver,this);
+	}
+}
