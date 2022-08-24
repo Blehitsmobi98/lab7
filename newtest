@@ -1,0 +1,97 @@
+package example;		
+		
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+import org.testng.annotations.Test;	
+import org.testng.annotations.BeforeTest;	
+import org.testng.annotations.AfterTest;		
+public class NewTest {		
+	    public WebDriver driver;	   
+	    login_class log;
+	    xpaths xp;
+	    
+	    
+	    @BeforeTest
+		public void openURL() {	
+			System.setProperty("webdriver.chrome.driver", "C:\\Users\\4071\\Documents\\chromedriver_win32 (2)/chromedriver.exe");
+			WebDriver driver = new ChromeDriver();
+			driver.manage().window().maximize();
+			driver.get("http://baseline01.curemd.com/curemd/datLogin.asp");
+		}	
+	    
+		@Test(priority=1)				
+		public void login() 
+		{	
+			log = new login_class(driver);
+			log.username.sendKeys("ChargePatientie");
+			log.password.sendKeys("SuPPort.2014");
+			log.logbtn.click();
+		}	  	
+		
+		@Test(priority=2)				
+		public void gotoPatient() 
+		{
+			xp = new xpaths(driver);
+			for(String  openNewWindow : driver.getWindowHandles())
+			{
+			driver.switchTo().window(openNewWindow);				
+			}
+			driver.switchTo().frame("fraCureMD_Menu");
+			xp.patientIcon.click();
+			driver.switchTo().defaultContent();
+			driver.switchTo().frame("fraCureMD_Body");
+			xp.addPatient.click();
+			}
+		
+		@Test(priority=3)				
+		public void enterTitle() 
+		{
+			Select select = new Select (xp.addPatient);
+			select.selectByIndex(6);
+		}
+		
+		@Test(priority=4)	
+		public void enterName() 
+		{
+			xp = new xpaths(driver);
+			xp.fname.sendKeys("Mubashir");
+			xp.lname.sendKeys("Khan");
+		}
+		
+		@Test(priority=5)	
+		public void enterGender() 
+		{
+			Select select = new Select (xp.sex);
+			select.selectByIndex(0);
+		}
+		
+		@Test(priority=6)	
+		public void enterDOB() 
+		{
+			xp = new xpaths(driver);
+			xp.dob.sendKeys("08111998");
+		}
+		
+		@Test(priority=7)	
+		public void enterLocation() 
+		{
+			Select select = new Select (xp.location);
+			select.selectByVisibleText("Clinic One3");
+		}
+		
+		@Test(priority=8)	
+		public void save() 
+		{
+			xp.savebtn.click();
+			driver.switchTo().frame(xp.dupPatientframe);
+			xp.savenewbtn.click();
+		}
+		
+								
+		@AfterTest
+		public void afterTest() {
+			this.driver.quit();			
+		}		
+}	
