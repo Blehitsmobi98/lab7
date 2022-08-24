@@ -1,0 +1,25 @@
+package example;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+
+public class login_class {
+WebDriver driver;
+
+@FindBy (xpath="//input[contains(@name,'vchLogin_Name')]")
+WebElement username;
+
+@FindBy (xpath="//input[contains(@name,'vchPassword')]")
+WebElement password; 
+
+@FindBy (xpath="//button[contains(@class,'btn btn-danger')]")
+WebElement logbtn; 
+
+
+public login_class(WebDriver driver ) {
+	this.driver = driver;
+	PageFactory.initElements(driver,this);
+}
+}
