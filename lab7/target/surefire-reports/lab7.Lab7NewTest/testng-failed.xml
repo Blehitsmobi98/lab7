@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Failed suite [lab7.Lab7NewTest]" verbose="0">
+  <test thread-count="5" name="Command line test(failed)" verbose="0">
+    <classes>
+      <class name="lab7.Lab7NewTest">
+        <methods>
+          <include name="patientadd"/>
+          <include name="putdetails"/>
+          <include name="beforeTest"/>
+          <include name="afterTest"/>
+          <include name="login"/>
+        </methods>
+      </class> <!-- lab7.Lab7NewTest -->
+    </classes>
+  </test> <!-- Command line test(failed) -->
+</suite> <!-- Failed suite [lab7.Lab7NewTest] -->
